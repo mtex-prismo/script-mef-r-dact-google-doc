@@ -1,0 +1,75 @@
+function colorCustomElements() {
+  var doc = DocumentApp.getActiveDocument();
+  var body = doc.getBody();
+
+  // Liste des motifs à chercher
+  var patterns = [
+    "H1 :", "H2 :", "H3 :", "H4 :", "H5 :", "H6 :",
+    "span :", "div :","Span :", "Bouton :", "SPAN :",
+    "\\|\\*.*?\\*\\|", // Pour |*...*|
+    "/\\*.*?\\*/",     // Pour /*...*/
+    "Page :", "Mc ciblé :", "Score opti texte :", "Score toxicité texte :" // Contenus spécifiques
+  ];
+
+  // Couleur à appliquer (violet : #9900FF)
+  var color = "#9900FF";
+
+  // Fonction pour échapper les caractères spéciaux dans un motif
+  function escapeRegex(string) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+  // Appliquer la couleur pour chaque motif
+  patterns.forEach(function(pattern) {
+    var escapedPattern = escapeRegex(pattern); // Échapper le motif
+    var searchResult = body.findText(escapedPattern);
+
+    while (searchResult !== null) {
+      var startOffset = searchResult.getStartOffset();
+      var endOffset = searchResult.getEndOffsetInclusive();
+      var text = searchResult.getElement();
+      text.setForegroundColor(startOffset, endOffset, color); // Appliquer la couleur
+      searchResult = body.findText(escapedPattern, searchResult);
+    }
+  });
+
+  // Gestion des mots barrés dans des listes à puces
+  var listItems = body.getListItems();
+  listItems.forEach(function(listItem) {
+    var attributes = listItem.getAttributes();
+    if (attributes[DocumentApp.Attribute.STRIKETHROUGH] === true) {
+      listItem.setForegroundColor(color); // Appliquer la couleur aux mots barrés
+    }
+  });
+
+  // Gestion des contenus entre parenthèses, en gras et soulignés
+  var allText = body.getText();
+  var regex = /\(\S.*?\)/g; // Détecte les contenus entre parenthèses (regex)
+
+  var match;
+  while ((match = regex.exec(allText)) !== null) {
+    var textElement = body.findText(escapeRegex(match[0]));
+    if (textElement) {
+      var startOffset = textElement.getStartOffset();
+      var endOffset = textElement.getEndOffsetInclusive();
+      var element = textElement.getElement();
+
+      // Vérifier si toute la plage est en gras et soulignée
+      var isEntirelyBold = true;
+      var isEntirelyUnderlined = true;
+
+      for (var i = startOffset; i <= endOffset; i++) {
+        if (!element.isBold(i)) {
+          isEntirelyBold = false;
+        }
+        if (!element.isUnderline(i)) {
+          isEntirelyUnderlined = false;
+        }
+      }
+
+      if (isEntirelyBold && isEntirelyUnderlined) {
+        element.setForegroundColor(startOffset, endOffset, color); // Appliquer la couleur
+      }
+    }
+  }
+}
