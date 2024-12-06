@@ -5,7 +5,7 @@ function colorCustomElements() {
   // Liste des motifs à chercher
   var patterns = [
     "H1 :", "H2 :", "H3 :", "H4 :", "H5 :", "H6 :",
-    "span :", "div :","Span :", "Bouton :", "SPAN :",
+    "span :", "div :","Span :", "Bouton :", "SPAN :", "En mauve = ne pas ajouter",
     "\\|\\*.*?\\*\\|", // Pour |*...*|
     "/\\*.*?\\*/",     // Pour /*...*/
     "Page :", "Mc ciblé :", "Score opti texte :", "Score toxicité texte :" // Contenus spécifiques
