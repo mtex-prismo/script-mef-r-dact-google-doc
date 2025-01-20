@@ -8,7 +8,7 @@ function colorCustomElements() {
     "span :", "div :","Span :", "Bouton :", "SPAN :", 
     "\\|\\*.*?\\*\\|", // Pour |*...*|
     "/\\*.*?\\*/",     // Pour /*...*/
-    "Page :", "Mc ciblé :", "Score opti texte :", "Score toxicité texte :", "En mauve = ne pas ajouter" // Contenus spécifiques
+    "Page :", "Mc ciblé :", "Score opti texte :", "Score toxicité texte :", "En mauve = ne pas ajouter", "URL à utiliser : " // Contenus spécifiques
   ];
 
   // Couleur à appliquer (violet : #9900FF)
